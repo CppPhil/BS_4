@@ -1,0 +1,27 @@
+sudo zypper install source linux
+
+assuming that uname -r returns 3.7.10-1.1-default :
+sudo zypper in kernel-source=3.7.10-1.1
+
+cd /lib/modules
+sudo chmod 777 3.7.10-1.1-default
+cd 3.7.10-1.1-default
+ln -s /usr/src/linux-obj/i386/default build
+ln -s /usr/src/linux source
+
+navigate to the kernel modules source files, enter:
+make
+sudo ./install.sh
+
+cd /dev
+
+you can now write and read from and to trans0 and trans1 like so:
+echo "test" > trans0
+cat trans0
+
+enter CTRL + C to abort.
+
+be careful not to enter more than the buffer can hold at once if you have just one shell. The process will be sent into a waitqueue waiting for some other process to read some of the data, before it can write its data. Since there is no other process to do that the process (our only shell) will sleep forever with no way to wake it up.
+
+Of course & may be used to launch a sub shell (process).
+
